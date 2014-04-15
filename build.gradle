@@ -4,24 +4,47 @@ apply plugin: 'eclipse'
 // In this section you declare where to find the dependencies of your project
 repositories {
     mavenCentral()
+	maven {
+		url 'http://ec2-54-215-235-233.us-west-1.compute.amazonaws.com/artifactory/remote-repos'
+		credentials {
+			username = "deployer"
+			password = "eaap_passw0rd"
+		}
+	}
 }
 
 // In this section you declare the dependencies for your production and test code
 dependencies {
+
     compile 'org.glassfish.jersey.core:jersey-server:2.4.1'
+	compile 'org.glassfish.jersey.containers:jersey-container-servlet-core:2.5'
+            
+    compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.5'
+    
 	compile 'ch.qos.logback:logback-access:1.0.13'
 	compile 'ch.qos.logback:logback-classic:1.0.13'
+	
 	compile 'commons-configuration:commons-configuration:1.10'
+	compile 'org.apache.commons:commons-lang3:3.0'
+	
 	compile 'com.netflix.servo:servo-core:0.5.2'
 	compile 'com.netflix.servo:servo-graphite:0.5.2'
-	compile 'org.glassfish.jersey.media:jersey-media-json-jackson:2.5'
-	compile 'org.apache.commons:commons-lang3:3.0'
-	            
+         
+	compile 'eaap.lib:eaap-lib-auth-client:0.6'
     testCompile "junit:junit:4.11"
+    
+
 }
 
 apply plugin: 'checkstyle'
 checkstyle {
     ignoreFailures = false
     configFile = rootProject.file('codequality/checkstyle.xml')
+}
+
+apply plugin: 'war'
+war {
+    manifest {
+        attributes("Implementation-Title": "sandbox", "Implementation-Version": version, 'Build-Time-ISO-8601': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"))
+    }
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} ${HOSTNAME} [%thread] %-5level %logger{36}:%L - %msg%n</Pattern>
+        </layout>
+    </appender>
+
+    <appender name="EAAP_USERS_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/opt/eaap/logs/eaap-users/eaap-users.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>/opt/eaap/logs/eaap-users_%i.log</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>11</MaxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}|${HOSTNAME}|[%thread]|%-5level|%logger:%L|%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+    <appender name="EAAP_USERS_TRANSACTION_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/opt/eaap/logs/eaap-users/eaap-users-transaction.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>/opt/eaap/logs/eaap-users/eaap-users-transaction_%d{yyyy-MM-dd_HH}_%i.log</FileNamePattern>
+            <maxHistory>10</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>10MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%msg%n</Pattern>
+        </encoder>
+    </appender>
+
+
+    <logger level="ALL" name="com.eaap.users">
+        <appender-ref ref="EAAP_USERS_LOG_FILE" />
+    </logger>
+
+    <logger level="INFO" additivity="false" name="com.eaap.transaction" >
+        <appender-ref ref="EAAP_USERS_TRANSACTION_LOG_FILE" />
+    </logger>
+
+    <root level="debug">
+        <appender-ref ref="STDOUT" />
+    </root>
+    
+</configuration>
